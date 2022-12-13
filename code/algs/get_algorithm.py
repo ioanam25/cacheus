@@ -7,7 +7,7 @@ from .lecar import LeCaR
 from .alecar6 import ALeCaR6
 from .lirs import LIRS
 from .dlirs import DLIRS
-from .cacheus import Cacheus
+from .cacheus_old import Cacheus
 from .arcalecar import ARCALeCaR
 from .lirsalecar import LIRSALeCaR
 

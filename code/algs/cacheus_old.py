@@ -8,6 +8,10 @@ import numpy as np
 
 
 class Cacheus:
+    ######################
+    ## INTERNAL CLASSES ##
+    ######################
+
     # Entry to track the page information
     class Cacheus_Entry:
         # TODO is_new logic to is not demoted
@@ -16,9 +20,10 @@ class Cacheus:
             self.freq = freq
             self.time = time
             self.evicted_time = None
+            self.is_demoted = False
             self.is_new = is_new
 
-        # Return min heap (frequency)
+        # Minimal comparitors needed for HeapDict
         def __lt__(self, other):
             if self.freq == other.freq:
                 return self.time > other.time
@@ -29,21 +34,27 @@ class Cacheus:
             return "(o={}, f={}, t={})".format(self.oblock, self.freq,
                                                self.time)
 
+    # Adaptive learning rate of Cacheus
+    # TODO consider an internal time instead of taking time as a parameter
     class Cacheus_Learning_Rate:
+        # kwargs: We're using keyword arguments so that they can be passed down as
+        #         needed. We can filter through the keywords for ones we want,
+        #         ignoring those we don't use. We then update our instance with
+        #         the passed values for the given keys after the default
+        #         initializations and before the possibly passed keys are used in
+        #         a way that cannot be taken back, such as setting the learning rate
+        #         reset point, which is reliant on the starting learning_rate
         def __init__(self, period_length, **kwargs):
-            self.learning_rate = 0.1
+            self.learning_rate = np.sqrt((2.0 * np.log(2)) / period_length)
 
             process_kwargs(self, kwargs, acceptable_kws=['learning_rate'])
 
             self.learning_rate_reset = min(max(self.learning_rate, 0.001), 1)
             self.learning_rate_curr = self.learning_rate
             self.learning_rate_prev = 0.0
+            self.learning_rates = []
 
             self.period_len = period_length
-
-            self.s_limit = self.cache_size - self.q_limit
-            self.q_size = 0
-            self.s_size = 0
 
             self.hitrate = 0
             self.hitrate_prev = 0.0
@@ -58,23 +69,29 @@ class Cacheus:
             return self.learning_rate * other
 
         # Update the adaptive learning rate when we've reached the end of a period
-        # ALGORITHM 3 pseudocode
         def update(self, time):
             if time % self.period_len == 0:
-                hitrate_curr = round(self.hitrate / self.period_len, 3)
+                # TODO: remove float() when using Python3
+                hitrate_curr = round(self.hitrate / float(self.period_len), 3)
                 hitrate_diff = round(hitrate_curr - self.hitrate_prev, 3)
 
-                #delta_LR = lr_{t-i} - lr{t-2i}
                 delta_LR = round(self.learning_rate_curr, 3) - round(
                     self.learning_rate_prev, 3)
-                delta = self.getSign(delta_LR, hitrate_diff)
+                delta, delta_HR = self.updateInDeltaDirection(
+                    delta_LR, hitrate_diff)
 
-                if delta != 0:
-                    self.learning_rate = max(
-                        self.learning_rate + delta * (self.learning_rate * delta_LR), 0.001)
+                if delta > 0:
+                    self.learning_rate = min(
+                        self.learning_rate +
+                        abs(self.learning_rate * delta_LR), 1)
                     self.hitrate_nega_count = 0
                     self.hitrate_zero_count = 0
-
+                elif delta < 0:
+                    self.learning_rate = max(
+                        self.learning_rate -
+                        abs(self.learning_rate * delta_LR), 0.001)
+                    self.hitrate_nega_count = 0
+                    self.hitrate_zero_count = 0
                 elif delta == 0 and hitrate_diff <= 0:
                     if (hitrate_curr <= 0 and hitrate_diff == 0):
                         self.hitrate_zero_count += 1
@@ -90,33 +107,45 @@ class Cacheus:
                             self.hitrate_nega_count = 0
                         else:
                             self.updateInRandomDirection()
-
                 self.learning_rate_prev = self.learning_rate_curr
                 self.learning_rate_curr = self.learning_rate
                 self.hitrate_prev = hitrate_curr
                 self.hitrate_diff_prev = hitrate_diff
                 self.hitrate = 0
 
+            # TODO check that this is necessary and shouldn't be moved to
+            #      the Visualizinator
+            self.learning_rates.append(self.learning_rate)
 
         # Update the learning rate according to the change in learning_rate and hitrate
-        # learning_rate_diff: lr_{t-i} - lr{t-2i}
-        # hit_rate_diff: HR_{t} - HR_{t-i}
-        def getSign(self, learning_rate_diff, hitrate_diff):
+        def updateInDeltaDirection(self, learning_rate_diff, hitrate_diff):
             delta = learning_rate_diff * hitrate_diff
             # Get delta = 1 if learning_rate_diff and hitrate_diff are both positive or negative
             # Get delta =-1 if learning_rate_diff and hitrate_diff have different signs
             # Get delta = 0 if either learning_rate_diff or hitrate_diff == 0
-            sign = 1 if delta > 0 else -1
-            if delta == 0:
-                sign = 0
-            return sign
+            delta = int(delta / abs(delta)) if delta != 0 else 0
+            delta_HR = 0 if delta == 0 and learning_rate_diff != 0 else 1
+            return delta, delta_HR
 
-        # Update the learning rate in a random direction
+        # Update the learning rate in a random direction or correct it from extremes
         def updateInRandomDirection(self):
-            # choose randomly a learning rate in [10^{-3}, 1)
-            self.learning_rate = np.random.uniform(0.001, 1)
+            if self.learning_rate >= 1:
+                self.learning_rate = 0.9
+            elif self.learning_rate <= 0.001:
+                self.learning_rate = 0.005
+            elif np.random.choice(['Increase', 'Decrease']) == 'Increase':
+                self.learning_rate = min(self.learning_rate * 1.25, 1)
+            else:
+                self.learning_rate = max(self.learning_rate * 0.75, 0.001)
 
-    # ALGORITHM 1 caching
+    # kwargs: We're using keyword arguments so that they can be passed down as
+    #         needed. We can filter through the keywords for ones we want,
+    #         ignoring those we don't use. We then update our instance with
+    #         the passed values for the given keys after the default
+    #         initializations and before the possibly passed keys are used in
+    #         a way that cannot be taken back, such as setting the weights(W)
+    #         Please note that cache_size is a required argument and not
+    #         optional like all the kwargs are
     def __init__(self, cache_size, window_size, **kwargs):
         # Randomness and Time
         np.random.seed(123)
@@ -125,15 +154,14 @@ class Cacheus:
         # Cache
         self.cache_size = cache_size
 
-        # two stacks for the cache(s and q) to update cache according to hit or miss
+        #two stacks for the cache(s and q) to mark demoted items faster
         self.s = DequeDict()
         self.q = DequeDict()
 
-        # lfu heap
+        #lfu heap
         self.lfu = HeapDict()
 
         # Histories
-        # TODO history size
         self.history_size = cache_size // 2
         self.lru_hist = DequeDict()
         self.lfu_hist = DequeDict()
@@ -150,40 +178,36 @@ class Cacheus:
                        acceptable_kws=['initial_weight', 'history_size'])
 
         # Decision Weights
-        # TODO make 3
         self.W = np.array([self.initial_weight, 1 - self.initial_weight],
                           dtype=np.float32)
 
-        # Variables TODO see if we need them
-        # hits_ratio = 0.01
-        # self.q_limit = max(1, int((hits_ratio * self.cache_size) + 0.5))
-        # self.s_limit = self.cache_size - self.q_limit
-        # self.q_size = 0
-        # self.s_size = 0
-        # self.dem_count = 0
-        # self.nor_count = 0
-        # self.q_sizes = []
+        # Variables
+        hirsRatio = 0.01
+        self.q_limit = max(1, int((hirsRatio * self.cache_size) + 0.5))
+        self.s_limit = self.cache_size - self.q_limit
+        self.q_size = 0
+        self.s_size = 0
+        self.dem_count = 0
+        self.nor_count = 0
+        self.q_sizes = []
 
         # Visualize
         self.visual = Visualizinator(
             labels=['W_lru', 'W_lfu', 'hit-rate', 'q_size'],
             windowed_labels=['hit-rate'],
-            window_size=window_size,
+            window_size = window_size,
             **kwargs)
         # Pollution
         self.pollution = Pollutionator(cache_size, **kwargs)
 
-        # True if oblock is in cache (which LRU can represent)
-
-    # check if the page requested is in cache
+    # True if oblock is in cache (which LRU can represent)
     def __contains__(self, oblock):
         return (oblock in self.s or oblock in self.q)
-
 
     def cacheFull(self):
         return len(self.s) + len(self.q) == self.cache_size
 
-    # Hit in MRU portion of the cache
+    #Hit in MRU portion of the cache
     def hitinS(self, oblock):
         x = self.s[oblock]
         x.time = self.time
@@ -192,7 +216,7 @@ class Cacheus:
         x.freq += 1
         self.lfu[oblock] = x
 
-    # Hit in LRU portion of the cache
+    #Hit in LRU portion of the cache
     def hitinQ(self, oblock):
         x = self.q[oblock]
         x.time = self.time
@@ -200,11 +224,17 @@ class Cacheus:
         x.freq += 1
         self.lfu[oblock] = x
 
+        if x.is_demoted:
+            self.adjustSize(True)
+            x.is_demoted = False
+            self.dem_count -= 1
         del self.q[x.oblock]
         self.q_size -= 1
 
         if self.s_size >= self.s_limit:
             y = self.s.popFirst()
+            y.is_demoted = True
+            self.dem_count += 1
             self.s_size -= 1
             self.q[y.oblock] = y
             self.q_size += 1
@@ -213,15 +243,17 @@ class Cacheus:
         self.s_size += 1
 
     # Add Entry to S with given frequency
-    def addToCacheLocation(self, location, oblock, freq, isNew=True):
+    def addToS(self, oblock, freq, isNew=True):
         x = self.Cacheus_Entry(oblock, freq, self.time, isNew)
-        if location == "s":
-            self.s[oblock] = x
-            self.s_size += 1
-        else:
-            self.q[oblock] = x
-            self.q_size += 1
+        self.s[oblock] = x
         self.lfu[oblock] = x
+        self.s_size += 1
+
+    def addToQ(self, oblock, freq, isNew=True):
+        x = self.Cacheus_Entry(oblock, freq, self.time, isNew)
+        self.q[oblock] = x
+        self.lfu[oblock] = x
+        self.q_size += 1
 
     # Add Entry to history dictated by policy
     # policy: 0, Add Entry to LRU History
@@ -232,6 +264,8 @@ class Cacheus:
         policy_history = None
         if policy == 0:
             policy_history = self.lru_hist
+            if x.is_new:
+                self.nor_count += 1
         elif policy == 1:
             policy_history = self.lfu_hist
         elif policy == -1:
@@ -241,6 +275,9 @@ class Cacheus:
         if len(policy_history) == self.history_size:
             evicted = self.getLRU(policy_history)
             del policy_history[evicted.oblock]
+	    #adding this part here ######
+            if policy_history == self.lru_hist and evicted.is_new:
+            	self.nor_count -= 1
         policy_history[x.oblock] = x
 
     # Get the LRU item in the given DequeDict
@@ -270,11 +307,11 @@ class Cacheus:
         # that the LRU and LFU Entries are the same Entry
         if lru is lfu:
             evicted, policy = lru, -1
-        elif policy == 0: # LRU
+        elif policy == 0:
             evicted = lru
             del self.q[evicted.oblock]
             self.q_size -= 1
-        elif policy == 1: # LFU
+        elif policy == 1:
             evicted = lfu
             if evicted.oblock in self.s:
                 del self.s[evicted.oblock]
@@ -283,7 +320,11 @@ class Cacheus:
                 del self.q[evicted.oblock]
                 self.q_size -= 1
 
-        if policy == -1: # TODO atm policy in 0, 1
+        if evicted.is_demoted:
+            self.dem_count -= 1
+            evicted.is_demoted = False
+		
+        if policy == -1:
             del self.q[evicted.oblock]
             self.q_size -= 1
 
@@ -295,7 +336,6 @@ class Cacheus:
 
         return evicted.oblock, policy
 
-    # ALGORITHM 2
     # Adjust the weights based on the given rewards for LRU and LFU
     def adjustWeights(self, rewardLRU, rewardLFU):
         reward = np.array([rewardLRU, rewardLFU], dtype=np.float32)
@@ -307,35 +347,53 @@ class Cacheus:
         elif self.W[1] >= 0.99:
             self.W = np.array([0.01, 0.99], dtype=np.float32)
 
-    # Update cache data structure
+    def adjustSize(self, hit_in_Q):
+        if hit_in_Q:
+            dem_count = max(1, self.dem_count)
+            self.s_limit = min(
+                self.cache_size - 1, self.s_limit +
+                max(1, int((self.nor_count / dem_count) + 0.5)))
+            self.q_limit = self.cache_size - self.s_limit
+        else:
+            nor_count = max(1, self.nor_count)
+            self.q_limit = min(
+                self.cache_size - 1, self.q_limit +
+                max(1, int((self.dem_count / nor_count) + 0.5)))
+            self.s_limit = self.cache_size - self.q_limit
+
     def hitinLRUHist(self, oblock):
         evicted = None
+
         entry = self.lru_hist[oblock]
-        entry.freq = entry.freq + 1
+        freq = entry.freq + 1
         del self.lru_hist[oblock]
-        # if entry.is_new:
-        #     self.nor_count -= 1
-        #     entry.is_new = False
-        #     self.adjustSize(False)
+        if entry.is_new:
+            self.nor_count -= 1
+            entry.is_new = False
+            self.adjustSize(False)
         self.adjustWeights(-1, 0)
+
         if (self.s_size + self.q_size) >= self.cache_size:
             evicted, policy = self.evict()
-        self.addToCacheLocation(entry.oblock, "s", entry.freq, isNew=False)
-        # self.limitStack()
+
+        self.addToS(entry.oblock, entry.freq, isNew=False)
+        self.limitStack()
+
         return evicted
 
     def hitinLFUHist(self, oblock):
         evicted = None
+
         entry = self.lfu_hist[oblock]
-        entry.freq = entry.freq + 1
+        freq = entry.freq + 1
         del self.lfu_hist[oblock]
         self.adjustWeights(0, -1)
 
         if (self.s_size + self.q_size) >= self.cache_size:
             evicted, policy = self.evict()
 
-        self.addToCacheLocation(entry.oblock, "q", entry.freq, isNew=False)
-        # self.limitStack()
+        self.addToS(entry.oblock, entry.freq, isNew=False)
+        self.limitStack()
 
         return evicted
 
@@ -345,7 +403,9 @@ class Cacheus:
             demoted = self.s.popFirst()
             self.s_size -= 1
 
-            # Moved from s to q
+            demoted.is_demoted = True
+            self.dem_count += 1
+
             self.q[demoted.oblock] = demoted
             self.q_size += 1
 
