@@ -1,4 +1,3 @@
-import numpy as np
 from .dequedict import DequeDict
 from .optional_args import process_kwargs
 
