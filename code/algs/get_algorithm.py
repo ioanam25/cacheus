@@ -10,7 +10,7 @@ from .dlirs import DLIRS
 from .cacheus_old import Cacheus
 from .arcalecar import ARCALeCaR
 from .lirsalecar import LIRSALeCaR
-
+from .lecar_new import LeCaR_New
 
 def get_algorithm(alg_name):
     alg_name = alg_name.lower()
@@ -27,16 +27,19 @@ def get_algorithm(alg_name):
         return ARC
     if alg_name == 'lecar':
         return LeCaR
+    if alg_name == 'lecar_new':
+        return LeCaR_New
     if alg_name == 'alecar6':
         return ALeCaR6
     if alg_name == 'lirs':
         return LIRS
     if alg_name == 'dlirs':
         return DLIRS
-    if alg_name == 'cacheus':
+    if alg_name == 'cacheus_old':
         return Cacheus
     if alg_name == 'arcalecar':
         return ARCALeCaR
     if alg_name == 'lirsalecar':
         return LIRSALeCaR
+
     return None

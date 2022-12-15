@@ -1,3 +1,5 @@
+import random
+
 from .lib.dequedict import DequeDict
 from .lib.heapdict import HeapDict
 from .lib.pollutionator import Pollutionator
@@ -7,7 +9,7 @@ from .lib.cacheop import CacheOp
 import numpy as np
 
 
-class Cacheus:
+class CacheusNew:
     # Entry to track the page information
     class Cacheus_Entry:
         def __init__(self, oblock, freq=1, time=0, is_new=True):
@@ -119,22 +121,18 @@ class Cacheus:
 
         # Cache
         self.cache_size = cache_size
-
-        # two stacks for the cache(s and q) to update cache according to hit or miss
         self.s = DequeDict()
         self.q = DequeDict()
+        self.r = DequeDict()
 
         # lfu heap
         self.lfu = HeapDict()
 
         # Histories
-        # TODO history size
-        self.history_size = cache_size // 2
+        self.history_size = cache_size // 3
         self.lru_hist = DequeDict()
         self.lfu_hist = DequeDict()
-
-        # Decision Weights Initilized
-        self.initial_weight = 0.5
+        self.random_hist = DequeDict()
 
         # Learning Rate
         self.learning_rate = self.Cacheus_Learning_Rate(
@@ -146,19 +144,21 @@ class Cacheus:
 
         # Decision Weights
         # TODO make 3
-        self.W = np.array([self.initial_weight, 1 - self.initial_weight],
-                          dtype=np.float32)
+        self.W = np.array([0.4, 0.4, 0.2], dtype=np.float32)
 
         # Variables TODO see if we need them
         hits_ratio = 0.01
         self.q_limit = max(1, int((hits_ratio * self.cache_size) + 0.5))
-        self.s_limit = self.cache_size - self.q_limit
+        self.s_limit = self.cache_size - self.q_limit - 0.1 * self.cache_size
+        print("s limit", self.s_limit)
+        self.r_limit = 0.1 * cache_size
         self.q_size = 0
         self.s_size = 0
+        self.r_size = 0
 
         # Visualize
         self.visual = Visualizinator(
-            labels=['W_lru', 'W_lfu', 'hit-rate', 'q_size'],
+            labels=['W_lru', 'W_lfu', 'W_random', 'hit-rate', 'q_size'],
             windowed_labels=['hit-rate'],
             window_size=window_size,
             **kwargs)
@@ -167,17 +167,16 @@ class Cacheus:
 
     # check if the page requested is in cache
     def __contains__(self, oblock):
-        return (oblock in self.s or oblock in self.q)
+        return (oblock in self.s or oblock in self.q or oblock in self.r)
 
     def cacheFull(self):
-        return len(self.s) + len(self.q) == self.cache_size
+        return len(self.s) + len(self.q) + len(self.r) == self.cache_size
 
     # Hit in MRU portion of the cache
     def hitinS(self, oblock):
         x = self.s[oblock]
         x.time = self.time
         self.s[oblock] = x
-
         x.freq += 1
         self.lfu[oblock] = x
 
@@ -201,15 +200,26 @@ class Cacheus:
         self.s[x.oblock] = x
         self.s_size += 1
 
+    # Hit in randomly added part of cache
+    def hitinR(self, oblock):
+        x = self.r[oblock]
+        x.time = self.time
+        self.s[oblock] = x
+        x.freq += 1
+        self.lfu[oblock] = x
+
     # Add Entry to S with given frequency
     def addToCacheLocation(self, location, oblock, freq, isNew=True):
         x = self.Cacheus_Entry(oblock, freq, self.time, isNew)
         if location == "s":
             self.s[oblock] = x
             self.s_size += 1
-        else:
+        elif location == "q":
             self.q[oblock] = x
             self.q_size += 1
+        else:
+            self.r[oblock] = x
+            self.r_size += 1
         self.lfu[oblock] = x
 
     # Add Entry to history dictated by policy
@@ -224,19 +234,24 @@ class Cacheus:
         elif policy == 1:
             policy_history = self.lfu_hist
         elif policy == -1:
-            return
+            policy_history = self.random_hist
 
         # Evict from history is it is full
         if len(policy_history) == self.history_size:
+            print("!!!!")
             evicted = self.getLRU(policy_history)
             del policy_history[evicted.oblock]
         policy_history[x.oblock] = x
 
     # Get the LRU item in the given DequeDict
-    # NOTE: DequeDict can be: lru, lru_hist, or lfu_hist
-    # NOTE: does *NOT* remove the LRU Entry from given DequeDict
     def getLRU(self, dequeDict):
         return dequeDict.first()
+
+    def getRandom(self, dequeDict):
+        random_index = random.randint(0, len(dequeDict))
+        for i, elem in enumerate(dequeDict):
+            if i == random_index:
+                return elem
 
     # Get the LFU min item in the LFU (HeapDict)
     # NOTE: does *NOT* remove the LFU Entry from LFU
@@ -245,12 +260,19 @@ class Cacheus:
 
     # Get the random eviction choice based on current weights
     def getChoice(self):
-        return 0 if np.random.rand() < self.W[0] else 1
+        p = np.random.rand()
+        if p < self.W[0]:
+            return 0
+        elif self.W[0] <= p <= self.W[0] + self.W[1]:
+            return 1
+        else:
+            return -1
 
     # Evict an entry
     def evict(self):
         lru = self.getLRU(self.q)
         lfu = self.getHeapMin()
+        rand = self.getRandom(self.q)
 
         evicted = lru
         policy = self.getChoice()
@@ -271,9 +293,9 @@ class Cacheus:
             elif evicted.oblock in self.q:
                 del self.q[evicted.oblock]
                 self.q_size -= 1
-
-        if policy == -1: # TODO atm policy in 0, 1
-            del self.q[evicted.oblock]
+        elif policy == -1:
+            evicted = rand
+            del self.r[evicted.oblock]
             self.q_size -= 1
 
         del self.lfu[evicted.oblock]
@@ -286,15 +308,17 @@ class Cacheus:
 
     # ALGORITHM 2
     # Adjust the weights based on the given rewards for LRU and LFU
-    def adjustWeights(self, rewardLRU, rewardLFU):
+    def adjustWeights(self, rewardLRU, rewardLFU, rewardRandom):
         reward = np.array([rewardLRU, rewardLFU], dtype=np.float32)
         self.W = self.W * np.exp(self.learning_rate * reward)
         self.W = self.W / np.sum(self.W)
 
         if self.W[0] >= 0.99:
-            self.W = np.array([0.99, 0.01], dtype=np.float32)
+            self.W = np.array([0.98, 0.01, 0.01], dtype=np.float32)
         elif self.W[1] >= 0.99:
-            self.W = np.array([0.01, 0.99], dtype=np.float32)
+            self.W = np.array([0.01, 0.98, 0.01], dtype=np.float32)
+        elif self.W[2] >= 0.99:
+            self.W = np.array([0.01, 0.01, 0.98], dtype=np.float32)
 
     # Update cache data structure
     def hitinLRUHist(self, oblock):
@@ -302,15 +326,11 @@ class Cacheus:
         entry = self.lru_hist[oblock]
         entry.freq = entry.freq + 1
         del self.lru_hist[oblock]
-        # if entry.is_new:
-        #     self.nor_count -= 1
-        #     entry.is_new = False
-        #     self.adjustSize(False)
-        self.adjustWeights(-1, 0)
-        if (self.s_size + self.q_size) >= self.cache_size:
+        self.adjustWeights(-0.98, -0.01, -0.01)
+        if (self.s_size + self.q_size + self.r) >= self.cache_size:
             evicted, policy = self.evict()
         self.addToCacheLocation(entry.oblock, "s", entry.freq, isNew=False)
-        # self.limitStack()
+        self.limitStack()
         return evicted
 
     def hitinLFUHist(self, oblock):
@@ -318,14 +338,25 @@ class Cacheus:
         entry = self.lfu_hist[oblock]
         entry.freq = entry.freq + 1
         del self.lfu_hist[oblock]
-        self.adjustWeights(0, -1)
+        self.adjustWeights(-0.01, -0.98, -0.01)
 
-        if (self.s_size + self.q_size) >= self.cache_size:
+        if (self.s_size + self.q_size + self.r) >= self.cache_size:
             evicted, policy = self.evict()
 
         self.addToCacheLocation(entry.oblock, "q", entry.freq, isNew=False)
-        # self.limitStack()
+        self.limitStack()
+        return evicted
 
+    def hitinRandHist(self, oblock):
+        evicted = None
+        entry = self.random_hist[oblock]
+        entry.freq = entry.freq + 1
+        del self.random_hist[oblock]
+        self.adjustWeights(-0.01, -0.01, -0.98)
+        if (self.s_size + self.q_size) >= self.cache_size:
+            evicted, policy = self.evict()
+        self.addToCacheLocation(entry.oblock, "r", entry.freq, isNew=False)
+        self.limitStack()
         return evicted
 
     def limitStack(self):
@@ -340,17 +371,21 @@ class Cacheus:
 
     # Cache Miss
     def miss(self, oblock):
+        print("MISSSS")
         evicted = None
         freq = 1
-        if (self.s_size + self.q_size) >= self.cache_size:
-            evicted, policy = self.evict()
-            self.addToQ(oblock, freq, isNew=True)
+        if (self.s_size + self.q_size + self.r_size) >= self.cache_size:
             self.limitStack()
+            print("!!!!!!!!!!", self.cache_size, self.s_size, self.q_size, self.r_size)
+            evicted, policy = self.evict()
+            self.addToCacheLocation(oblock, "q", freq, isNew=True)
         else:
             if self.s_size < self.s_limit and self.q_size == 0:
-                self.addToS(oblock, freq, isNew=False)
+                self.addToCacheLocation(oblock, "s", freq, isNew=False)
             elif self.q_size < self.q_limit:
-                self.addToQ(oblock, freq, isNew=False)
+                self.addToCacheLocation(oblock, "q", freq, isNew=False)
+            elif self.r_size < self.r_limit:
+                self.addToCacheLocation(oblock, "r", freq, isNew=False)
 
         return evicted
 
@@ -365,6 +400,7 @@ class Cacheus:
         self.visual.add({
             'W_lru': (self.time, self.W[0], ts),
             'W_lfu': (self.time, self.W[1], ts),
+            'W_rand': (self.time, self.W[2], ts),
             'q_size': (self.time, self.q_size, ts)
         })
 
@@ -374,12 +410,17 @@ class Cacheus:
             self.hitinS(oblock)
         elif oblock in self.q:
             self.hitinQ(oblock)
+        elif oblock in self.r:
+            self.hitinR(oblock)
         elif oblock in self.lru_hist:
             miss = True
             evicted = self.hitinLRUHist(oblock)
         elif oblock in self.lfu_hist:
             miss = True
             evicted = self.hitinLFUHist(oblock)
+        elif oblock in self.random_hist:
+            miss = True
+            evicted = self.hitinRandHist(oblock)
         else:
             miss = True
             evicted = self.miss(oblock)

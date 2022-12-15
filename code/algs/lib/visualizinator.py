@@ -92,6 +92,7 @@ class Visualizinator:
             tmp_labels.append("{} {}".format(alg, label))
 
         for label in tmp_labels:
+            print("LABEL", label)
             assert (label in self.tracked_values)
             x, y, ticks = zip(*self.tracked_values[label])
             x_min = min(x_min, min(x)) if x_min else min(x)

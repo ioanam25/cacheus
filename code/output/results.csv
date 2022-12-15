@@ -231,3 +231,130 @@ home2sample.blkparse,fiu,cacheus,215,1102,1317,0,5000,5000,size,16.32,,0.01
 home2sample.blkparse,fiu,arc,215,1102,1317,0,5000,5000,size,16.32,,0.01,|('learning_rate', 0.1)|
 home2sample.blkparse,fiu,cacheus,215,1102,1317,0,100000,100000,size,16.32,,0.01
 home2sample.blkparse,fiu,arc,215,1102,1317,0,100000,100000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,0,1317,1317,0,12,0.1,reuse,0.0,,0.02
+home2sample.blkparse,fiu,arc,0,1317,1317,0,12,0.1,reuse,0.0,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,0,1317,1317,0,10,10,size,0.0,,0.02
+home2sample.blkparse,fiu,arc,0,1317,1317,0,10,10,size,0.0,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,16,1301,1317,0,15,15,size,1.21,,0.02
+home2sample.blkparse,fiu,arc,0,1317,1317,0,15,15,size,0.0,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,37,1280,1317,0,50,50,size,2.81,,0.02
+home2sample.blkparse,fiu,arc,50,1267,1317,0,50,50,size,3.8,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,57,1260,1317,0,100,100,size,4.33,,0.03
+home2sample.blkparse,fiu,arc,70,1247,1317,0,100,100,size,5.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,199,1118,1317,0,500,500,size,15.11,,0.02
+home2sample.blkparse,fiu,arc,159,1158,1317,0,500,500,size,12.07,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,215,1102,1317,0,1000,1000,size,16.32,,0.01
+home2sample.blkparse,fiu,arc,215,1102,1317,0,1000,1000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,215,1102,1317,0,5000,5000,size,16.32,,0.01
+home2sample.blkparse,fiu,arc,215,1102,1317,0,5000,5000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,215,1102,1317,0,100000,100000,size,16.32,,0.01
+home2sample.blkparse,fiu,arc,215,1102,1317,0,100000,100000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,0,1317,1317,0,12,0.1,reuse,0.0,,0.02,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,0,1317,1317,0,12,0.1,reuse,0.0,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,0,1317,1317,0,10,10,size,0.0,,0.02,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,0,1317,1317,0,10,10,size,0.0,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,16,1301,1317,0,15,15,size,1.21,,0.02,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,0,1317,1317,0,15,15,size,0.0,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,38,1279,1317,0,50,50,size,2.89,,0.02,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,50,1267,1317,0,50,50,size,3.8,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,55,1262,1317,0,100,100,size,4.18,,0.02,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,70,1247,1317,0,100,100,size,5.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,199,1118,1317,0,500,500,size,15.11,,0.02,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,159,1158,1317,0,500,500,size,12.07,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,215,1102,1317,0,1000,1000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,215,1102,1317,0,1000,1000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,215,1102,1317,0,5000,5000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,215,1102,1317,0,5000,5000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,cacheus,215,1102,1317,0,100000,100000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home2sample.blkparse,fiu,arc,215,1102,1317,0,100000,100000,size,16.32,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,66,934,1000,0,16,0.1,reuse,6.6,,0.03,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,0,1000,1000,0,16,0.1,reuse,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,30,970,1000,0,10,10,size,3.0,,0.02,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,0,1000,1000,0,10,10,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,60,940,1000,0,15,15,size,6.0,,0.02,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,0,1000,1000,0,15,15,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,257,743,1000,0,50,50,size,25.7,,0.02,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,3,997,1000,0,50,50,size,0.3,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,318,682,1000,0,100,100,size,31.8,,0.02,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,265,735,1000,0,100,100,size,26.5,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,539,461,1000,0,500,500,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,539,461,1000,0,500,500,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,539,461,1000,0,1000,1000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,539,461,1000,0,1000,1000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,539,461,1000,0,5000,5000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,539,461,1000,0,5000,5000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus,539,461,1000,0,100000,100000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,arc,539,461,1000,0,100000,100000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,16,0.1,reuse,0.0,,0.01
+home1sample.blkparse,fiu,arc,0,1000,1000,0,16,0.1,reuse,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,10,10,size,0.0,,0.01
+home1sample.blkparse,fiu,arc,0,1000,1000,0,10,10,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,15,15,size,0.0,,0.01
+home1sample.blkparse,fiu,arc,0,1000,1000,0,15,15,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01
+home1sample.blkparse,fiu,arc,3,997,1000,0,50,50,size,0.3,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,100,100,size,0.0,,0.01
+home1sample.blkparse,fiu,arc,265,735,1000,0,100,100,size,26.5,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,500,500,size,0.0,,0.01
+home1sample.blkparse,fiu,arc,539,461,1000,0,500,500,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,1000,1000,size,0.0,,0.01
+home1sample.blkparse,fiu,arc,539,461,1000,0,1000,1000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,5000,5000,size,0.0,,0.01
+home1sample.blkparse,fiu,arc,539,461,1000,0,5000,5000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,100000,100000,size,0.0,,0.01
+home1sample.blkparse,fiu,arc,539,461,1000,0,100000,100000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,16,0.1,reuse,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,100,100,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,500,500,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,1000,1000,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,5000,5000,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,100000,100000,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,50,50,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,100,100,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,500,500,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,1000,1000,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,5000,5000,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_2experts,0,1000,1000,0,100000,100000,size,0.0,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_old,0,1000,1000,0,50,50,size,0.0,,0.01
+home1sample.blkparse,fiu,cacheus_old,0,1000,1000,0,100,100,size,0.0,,0.01
+home1sample.blkparse,fiu,cacheus_old,0,1000,1000,0,500,500,size,0.0,,0.01
+home1sample.blkparse,fiu,cacheus_old,0,1000,1000,0,1000,1000,size,0.0,,0.01
+home1sample.blkparse,fiu,cacheus_old,0,1000,1000,0,5000,5000,size,0.0,,0.01
+home1sample.blkparse,fiu,cacheus_old,0,1000,1000,0,100000,100000,size,0.0,,0.01
+home1sample.blkparse,fiu,cacheus_old,259,741,1000,0,50,50,size,25.9,,0.03
+home1sample.blkparse,fiu,cacheus_old,318,682,1000,0,100,100,size,31.8,,0.02
+home1sample.blkparse,fiu,cacheus_old,539,461,1000,0,500,500,size,53.9,,0.02
+home1sample.blkparse,fiu,cacheus_old,539,461,1000,0,1000,1000,size,53.9,,0.01
+home1sample.blkparse,fiu,cacheus_old,539,461,1000,0,5000,5000,size,53.9,,0.01
+home1sample.blkparse,fiu,cacheus_old,539,461,1000,0,100000,100000,size,53.9,,0.01
+home1sample.blkparse,fiu,cacheus_old,259,741,1000,0,50,50,size,25.9,,0.03
+home1sample.blkparse,fiu,lecar,66,934,1000,0,50,50,size,6.6,,0.02,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_old,318,682,1000,0,100,100,size,31.8,,0.02
+home1sample.blkparse,fiu,lecar,255,745,1000,0,100,100,size,25.5,,0.02,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_old,539,461,1000,0,500,500,size,53.9,,0.01
+home1sample.blkparse,fiu,lecar,539,461,1000,0,500,500,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_old,539,461,1000,0,1000,1000,size,53.9,,0.01
+home1sample.blkparse,fiu,lecar,539,461,1000,0,1000,1000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_old,539,461,1000,0,5000,5000,size,53.9,,0.01
+home1sample.blkparse,fiu,lecar,539,461,1000,0,5000,5000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,cacheus_old,539,461,1000,0,100000,100000,size,53.9,,0.01
+home1sample.blkparse,fiu,lecar,539,461,1000,0,100000,100000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar_new,55,945,1000,0,50,50,size,5.5,,0.03,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar,66,934,1000,0,50,50,size,6.6,,0.02,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar_new,227,773,1000,0,100,100,size,22.7,,0.03,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar,255,745,1000,0,100,100,size,25.5,,0.02,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar_new,539,461,1000,0,500,500,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar,539,461,1000,0,500,500,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar_new,539,461,1000,0,1000,1000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar,539,461,1000,0,1000,1000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar_new,539,461,1000,0,5000,5000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar,539,461,1000,0,5000,5000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar_new,539,461,1000,0,100000,100000,size,53.9,,0.01,|('learning_rate', 0.1)|
+home1sample.blkparse,fiu,lecar,539,461,1000,0,100000,100000,size,53.9,,0.01,|('learning_rate', 0.1)|
