@@ -77,7 +77,7 @@ class LeCaR_New:
         self.W = np.array([self.initial_weight, self.initial_weight, 0.2],
                           dtype=np.float32)
         # Visualize
-        self.visual = Visualizinator(labels=['W_lru', 'W_lfu', 'hit-rate'],
+        self.visual = Visualizinator(labels=['W_lru', 'W_lfu', 'W_rand', 'hit-rate'],
                                      windowed_labels=['hit-rate'],
                                      window_size=window_size,
                                      **kwargs)
@@ -151,23 +151,21 @@ class LeCaR_New:
         lfu = self.getHeapMin()
         rand = self.getRand(self.rand)
 
-        print("LFU", lfu)
-        print("RAND", rand)
         evicted = lru
         policy = self.getChoice()
-        print("POLICY", policy)
+        # print("POLICY", policy)
         # Since we're using Entry references, we use is to check
         # that the LRU and LFU Entries are the same Entry
         if lru is lfu:
             evicted, policy = lru, -1
         elif policy == 0:
-            print("evicted is LRU")
+            # print("evicted is LRU")
             evicted = lru
         elif policy == 1:
-            print("evicted is LFU")
+            # print("evicted is LFU")
             evicted = lfu
         elif policy == -1:
-            print("evicted is rand")
+            # print("evicted is rand")
             evicted = rand
 
         del self.lru[evicted.oblock]
@@ -227,7 +225,7 @@ class LeCaR_New:
                            **(self.time - entry.evicted_time))
             self.adjustWeights(0, reward_lfu, 0)
         elif oblock in self.rand_hist:
-            print("RANDDDD")
+            # print("RANDDDD")
             entry = self.rand_hist[oblock]
             freq = entry.freq + 1
             del self.rand_hist[oblock]

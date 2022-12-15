@@ -19,7 +19,8 @@ class Visualizinator:
         process_kwargs(self, kwargs, acceptable_kws=["enable_visual"])
 
         self.tracked_values = {}
- 
+
+        # print(labels)
         self.labels = labels
         for label in labels:
             self.tracked_values[label] = []
@@ -58,6 +59,7 @@ class Visualizinator:
                 window = self.windowed_values[label]
                 window.popleft()
                 window.append(value)
+                # print(ticks)
                 self.tracked_values[label].append((time, np.mean(window), ticks))
 
     # Get the summation for a given label
