@@ -452,3 +452,13 @@ home1sample.blkparse,fiu,lecar_new,539,461,1000,0,400,400,size,53.9,,0.01,|('lea
 home1sample.blkparse,fiu,lecar,539,461,1000,0,400,400,size,53.9,,0.01,|('learning_rate', 0.01)|
 home1sample.blkparse,fiu,lecar_new,539,461,1000,0,500,500,size,53.9,,0.01,|('learning_rate', 0.01)|
 home1sample.blkparse,fiu,lecar,539,461,1000,0,500,500,size,53.9,,0.01,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar_new,207,793,1000,0,100,100,size,20.7,,0.05,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar,229,771,1000,0,100,100,size,22.9,,0.04,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar_new,481,519,1000,0,200,200,size,48.1,,0.04,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar,494,506,1000,0,200,200,size,49.4,,0.04,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar_new,534,466,1000,0,300,300,size,53.4,,0.03,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar,539,461,1000,0,300,300,size,53.9,,0.02,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar_new,539,461,1000,0,400,400,size,53.9,,0.02,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar,539,461,1000,0,400,400,size,53.9,,0.02,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar_new,539,461,1000,0,500,500,size,53.9,,0.02,|('learning_rate', 0.01)|
+home1sample.blkparse,fiu,lecar,539,461,1000,0,500,500,size,53.9,,0.02,|('learning_rate', 0.01)|

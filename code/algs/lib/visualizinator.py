@@ -101,7 +101,9 @@ class Visualizinator:
             x_max = max(x_max, max(x)) if x_max else max(x)
             y_min = min(y_min, min(y)) if y_min else min(y)
             y_max = max(y_max, max(y)) if y_max else max(y)
-            
+        
+        graph.set_title("Cache Size of 100")
+
         if xlabel:
             graph.set_xlabel(xlabel)
         if ylabel:
@@ -110,13 +112,13 @@ class Visualizinator:
         if not show_yticks:
             graph.set_yticks([])
         
-        if not show_xticks:
-            graph.set_xticks([])
-        else:
-            graph.xaxis.set_major_locator(plt.MaxNLocator(np.max(ticks) + 1))
-            tick_labels = sorted(list(set(ticks)))
-            tick_labels = [str(i) for i in tick_labels]
-            graph.set_xticklabels(tick_labels)
+        # if not show_xticks:
+        #     graph.set_xticks([])
+        # else:
+        #     graph.xaxis.set_major_locator(plt.MaxNLocator(np.max(ticks) + 1))
+        #     tick_labels = sorted(list(set(ticks)))
+        #     tick_labels = [str(i) for i in tick_labels]
+        #     graph.set_xticklabels(tick_labels)
         
         graph.set_xlim(x_min, x_max)
         for label, color in zip(tmp_labels, colors):
