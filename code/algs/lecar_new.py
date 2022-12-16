@@ -9,10 +9,6 @@ import random
 
 
 class LeCaR_New:
-    ######################
-    ## INTERNAL CLASSES ##
-    ######################
-
     # Entry to track the page information
     class LeCaR_Entry:
         def __init__(self, oblock, freq=1, time=0):
